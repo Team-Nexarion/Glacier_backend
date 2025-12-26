@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  password   String
+  photo      String?
+  position   String
+  department String
+
+  createdAt  DateTime @default(now())
+
+  // Relations
+  verifiedOfficials Official[]
+  verifiedReports   LakeReport[] @relation("AdminVerifiedReports")
+}
+model Official {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  password    String
+  photo       String?
+  position    String
+  department  String
+
+  isVerified  Boolean  @default(false)
+
+  // Who verified this official
+  verifiedById Int?
+  verifiedBy   Admin?  @relation(fields: [verifiedById], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  uploadedReports LakeReport[]
+}
+
+
+model LakeReport {
+  id               Int      @id @default(autoincrement())
+
+  // Lake info
+  lakeName         String
+  latitude         Float
+  longitude        Float
+  region           String
+
+  // Uploaded by official
+  uploadedById     Int
+  uploadedBy       Official @relation(fields: [uploadedById], references: [id])
+  uploadedAt       DateTime @default(now())
+
+  // Observation
+  imageUrl         String
+  observationDate  DateTime @default(now())
+
+  // AI result
+  riskLevel        RiskLevel @default(LOW)
+  confidence       Float     @default(0.0)
+  assessedAt       DateTime  @default(now())
+
+  // Verification
+  verificationStatus VerificationStatus @default(PENDING)
+  verifiedById     Int?
+  verifiedBy       Admin?   @relation("AdminVerifiedReports", fields: [verifiedById], references: [id])
+  verifiedAt       DateTime?
+
+  createdAt        DateTime @default(now())
+}
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
