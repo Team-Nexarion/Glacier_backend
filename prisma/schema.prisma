@@ -25,7 +25,7 @@ model Admin {
 
   // Relations
   verifiedOfficials Official[]
-  verifiedReports   LakeReport[] @relation("AdminVerifiedReports")
+  
 }
 model Official {
   id          Int      @id @default(autoincrement())
@@ -47,6 +47,7 @@ model Official {
 
   // Relations
   uploadedReports LakeReport[]
+  verifiedReports  LakeReport[] @relation("VerifiedReports")
 }
 
 
@@ -74,9 +75,9 @@ model LakeReport {
   assessedAt       DateTime  @default(now())
 
   // Verification
-  verificationStatus VerificationStatus @default(PENDING)
+  verificationStatus VerificationStatus @default(VERIFIED)
   verifiedById     Int?
-  verifiedBy       Admin?   @relation("AdminVerifiedReports", fields: [verifiedById], references: [id])
+  verifiedBy       Official? @relation("VerifiedReports", fields: [verifiedById], references: [id])
   verifiedAt       DateTime?
 
   createdAt        DateTime @default(now())
