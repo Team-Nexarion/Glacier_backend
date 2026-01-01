@@ -1,8 +1,8 @@
-const adminRepository = require("./admin");
-const {officialRepository} = require("./official");
-const {lakeReportRepository} = require("./lakeReport");
+const AdminRepository = require("./admin");
+const OfficialRepository = require("./official");
+const LakeReportRepository = require("./lakeReport");
 module.exports = {
-  adminRepository,
-  officialRepository,
-  lakeReportRepository
+  AdminRepository,
+  OfficialRepository,
+  LakeReportRepository,
 };

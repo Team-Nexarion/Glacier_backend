@@ -31,4 +31,4 @@ const uploadOnCloudinary=async(localFilePath)=>{
         throw new ApiError(500, err.message);
     }
 }
-module.exports = { uploadOnCloudinary };
+module.exports = uploadOnCloudinary;

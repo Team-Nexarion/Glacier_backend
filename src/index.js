@@ -1,13 +1,16 @@
+require("dotenv").config();
 const express=require("express");
-const cookieparser=require("cookie-parser");
-const {errorHandler}=require("./middlewares");
+
+const cookieParser = require("cookie-parser");
+const { errorHandler } = require("./middlewares");
 const router=require("./routes");
+const PORT=process.env.PORT || 3000;
 const app=express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cookieparser());
+app.use(cookieParser());
 app.use("/",router);
 app.use(errorHandler);
-app.listen(3000,()=>{
-    console.log("Server is running on http://localhost:3000 ");
+app.listen(PORT,()=>{
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

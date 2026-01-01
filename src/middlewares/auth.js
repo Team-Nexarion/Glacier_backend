@@ -1,13 +1,13 @@
 const jwt = require("jsonwebtoken");
 const { ApiError } = require("../utils");
 
-module.exports=function authenticate(req, res, next) {
+function authenticate(req, res, next) {
   const token =
     req.cookies?.authToken ||
     req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    throw new ApiError(401, "Authentication required");
+    return next(new ApiError(401, "Authentication required"));
   }
 
   try {
@@ -18,8 +18,9 @@ module.exports=function authenticate(req, res, next) {
 
     next();
   } catch (err) {
-    throw new ApiError(401, "Invalid or expired token");
+    return next(new ApiError(401, "Invalid or expired token"));
   }
 }
 
 
+module.exports=authenticate;

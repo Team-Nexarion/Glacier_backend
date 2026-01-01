@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const { MailtrapTransport } = require("mailtrap");
-require("dotenv").config();
+
 
 if (!process.env.MAILTRAP_API_TOKEN) {
   throw new Error("MAILTRAP_API_TOKEN is missing in .env");
@@ -52,4 +52,4 @@ async function sendMail({ to, subject, text }) {
   }
 }
 
-module.exports = { sendMail };
+module.exports = sendMail;

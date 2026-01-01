@@ -1,12 +1,13 @@
-const adminRepository = require('../repository/admin');
-const {officialRepository} = require('../repository');
-const { ApiError } = require('../utils');
-const { ApiSuccess } = require('../utils');
+const { AdminRepository, OfficialRepository } = require("../repository");
+const prisma = require("../../prisma/client");
+
+const {ApiError,ApiSuccess}= require('../utils');
+
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var generator = require('generate-password');
-const { sendMail } = require("../utils");
-const { uploadOnCloudinary } = require("../utils");
+const {sendMail}= require("../utils");
+const {uploadOnCloudinary}= require("../utils");
 
 async function mail(to,subject,text) {
   await sendMail({
@@ -16,14 +17,14 @@ async function mail(to,subject,text) {
   });
 }
 
-const adminRepo = new adminRepository();
+const adminRepo = new AdminRepository(prisma);
+const officialRepo=new OfficialRepository(prisma);
 
 async function registerAdmin(req, res, next) {
   try {
     const creatorAdmin = req.user;
-  
+    //fetch data from body
     const { email, name, position, department} = req.body;
-
     if (!email || !name || !position || !department) {
       throw new ApiError(400, "Invalid input data");
     }
@@ -42,12 +43,12 @@ async function registerAdmin(req, res, next) {
     }
     ////password work
     var password = generator.generate({
-      length: 10,
+      length: 20,
       numbers: true,
-      symbols:true,
       lowercase:true,
       uppercase:true
     });
+
     const normalizedEmail = email.toLowerCase();
     const existingAdmin = await adminRepo.findUnique({
       email: normalizedEmail
@@ -64,8 +65,8 @@ async function registerAdmin(req, res, next) {
       name,
       position,
       department,
-      photo: cloudinaryResult.url ?? cloudinaryResult,
-      //createdById: creatorAdmin.id
+      photo:cloudinaryResult,
+      createdById: creatorAdmin.id
     });
     delete newAdmin.password; //jate admin password response a na jay ..onek kichu bhabte hoy bhai
     try{
@@ -87,6 +88,7 @@ async function registerAdmin(req, res, next) {
     next(error);
   }
 }
+
 async function adminSignIn(req, res, next) {
   try {
     const { email, password } = req.body;
@@ -101,7 +103,8 @@ async function adminSignIn(req, res, next) {
     if (!isPasswordValid) {
       throw new ApiError(401, "Invalid email or password");
     }
-    const payload = { id: admin.id, email: admin.email, role: admin.role };
+    const payload = { id: admin.id, email: admin.email, role: "admin" };
+  
     const token=jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'7d'});
 
     /// cookie ta k secure korte use korchi
@@ -140,16 +143,17 @@ async function adminSignOut(req, res, next) {
 
 async function verifyOfficial(req, res, next) {
   try{
-    const officialId = req.params.officialId;
+    const officialId = Number(req.params.officialId);
+    console.log("params: ",officialId);
     const user = req.user;
-    const official = await officialRepository.findUnique({id:officialId});
+    const official = await officialRepo.findUnique({id:officialId});
     if(!official){
       throw new ApiError(404,"Official not found");
     }
     if(official.isVerified){
       throw new ApiError(409,"Official is already verified");
     }
-    const verifiedOfficial = await officialRepository.update({id:officialId},{isVerified:true, verifiedById:user.id});
+    const verifiedOfficial = await officialRepo.update({id:officialId},{isVerified:true, verifiedById:user.id});
     try{
       mail(
         official.email,
@@ -171,7 +175,7 @@ async function verifyOfficial(req, res, next) {
 }
 async function getOfficials(req,res,next){
   try{
-    const officials = await officialRepository.findMany({
+    const officials = await officialRepo.findMany({
       isVerified:false
     });
 
@@ -187,15 +191,15 @@ async function getOfficials(req,res,next){
 }
 async function declineOfficial(req,res,next){
   try{
-    const officialId = req.params.officialId;
-    const official = await officialRepository.findUnique({id:officialId});
+    const officialId = Number(req.params.officialId);
+    const official = await officialRepo.findUnique({id:officialId});
     if(!official){
       throw new ApiError(404,"Official not found");
     }
     if(official.isVerified){
       throw new ApiError(409,"Official is already verified");
     }
-    const declinedOfficial = await officialRepository.delete({
+    const declinedOfficial = await officialRepo.delete({
       id:officialId
     });
     try{
@@ -254,4 +258,12 @@ async function updatePassword(req, res, next) {
   }
 }
 
-module.exports = { registerAdmin, adminSignIn,adminSignOut,verifyOfficial,getOfficials,declineOfficial,updatePassword};
+module.exports = { 
+  registerAdmin,
+  adminSignIn,
+  adminSignOut,
+  verifyOfficial,
+  getOfficials,
+  declineOfficial,
+  updatePassword
+};

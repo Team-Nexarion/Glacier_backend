@@ -10,4 +10,4 @@ class ApiSuccess {
     this.statusCode = statusCode;
   }
 }
-module.exports = {ApiSuccess};
+module.exports = ApiSuccess;

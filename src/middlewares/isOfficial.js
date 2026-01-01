@@ -1,17 +1,17 @@
 const {ApiError}= require("../utils");
 
-function isAdmin(req, res, next) {
+function isOfficial(req, res, next) {
   // At this point, authenticate middleware MUST have run
   // So req.user must exist
   if (!req.user) {
     throw new ApiError(401, "Not authenticated");
   }
 
-  if (req.user.role!== "admin") {
-    throw new ApiError(403, "Admin access required");
+  if (req.user.role!== "official") {
+    throw new ApiError(403, "Official access required");
   }
 
   next();
 }
 
-module.exports=isAdmin;
+module.exports=isOfficial;

@@ -6,10 +6,7 @@ const errorHandler = (err, req, res, next) => {
   res.status(statusCode).json({
     success: false,
     message: err.message || "Internal Server Error",
-    error:
-      process.env.NODE_ENV === "development"
-        ? err
-        : undefined
+    error: err.errors || null
   });
 };
-module.exports={errorHandler};
+module.exports=errorHandler;

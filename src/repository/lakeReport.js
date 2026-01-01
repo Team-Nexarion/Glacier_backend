@@ -1,8 +1,8 @@
 const prisma = require("../../prisma/client");
-const baseRepository = require('./baseRepository');
-class lakeReportRepository extends baseRepository {
+const BaseRepository = require('./baseRepository');
+class LakeReportRepository extends BaseRepository {
     constructor() {
         super(prisma.lakeReport);
     }
 }
-module.exports = {lakeReportRepository};
+module.exports = LakeReportRepository;
