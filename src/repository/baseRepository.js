@@ -35,5 +35,8 @@ class BaseRepository {
   deleteMany(where) {
     return this.model.deleteMany({ where });
   }
+  count(where = {}) {
+    return this.model.count({ where });
+  }
 }
 module.exports=BaseRepository

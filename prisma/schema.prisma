@@ -66,10 +66,11 @@ model lakereport {
   uploadedAt       DateTime @default(now())
 
   // Observation
-  subhajit Float @default(0.0)
-  sukalpo Float @default(0.0)
-  sukrit Float @default(0.0)
-  palit Float @default(0.0)
+  temperature_trend Float @default(0.0)
+  glacier_mass_balance Float @default(0.0)
+  glacial_lake_volume_change Float @default(0.0)
+  moraine_dam_stability Float @default(0.0)
+  glacier_retreat_rate Float @default(0.0)
   observationDate  DateTime @default(now())
 
   // AI result
