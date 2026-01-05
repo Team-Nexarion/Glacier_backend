@@ -16,9 +16,10 @@ class BaseRepository {
     return this.model.findUnique({ where });
   }
 
-  findMany(where = {}) {
-    return this.model.findMany({ where });
+  findMany(args = {}) {
+    return this.model.findMany(args);
   }
+
 
   update(where, data) {
     return this.model.update({ where, data });

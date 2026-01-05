@@ -3,7 +3,9 @@ const {
     registerOfficial,
     officialSignIn,
     officialSignOut,
-    updatePasswordOfficial
+    updatePasswordOfficial,
+    getOfficialProfile
+    
 }=require("../controllers");
 const middlewares = require("../middlewares");
 const authenticate = middlewares.authenticate;
@@ -14,4 +16,6 @@ officialRouter.post("/register",upload.single("photo"),registerOfficial);
 officialRouter.post("/signin",officialSignIn);
 officialRouter.post("/signout",authenticate,isOfficial,officialSignOut);
 officialRouter.patch("/updatepassword",authenticate,isOfficial,updatePasswordOfficial);
+officialRouter.get("/profile", authenticate, isOfficial, getOfficialProfile);
+
 module.exports=officialRouter;

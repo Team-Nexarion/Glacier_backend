@@ -49,6 +49,7 @@ model official {
   // Relations
   uploadedReports lakereport[]
   verifiedReports  lakereport[] @relation("VerifiedReports")
+  declinedReports lakereport[] @relation("DeclineReports")
 }
 
 
@@ -66,11 +67,10 @@ model lakereport {
   uploadedAt       DateTime @default(now())
 
   // Observation
-  temperature_trend Float @default(0.0)
-  glacier_mass_balance Float @default(0.0)
-  glacial_lake_volume_change Float @default(0.0)
-  moraine_dam_stability Float @default(0.0)
-  glacier_retreat_rate Float @default(0.0)
+  Lake_Area_km2 Float @default(0.0)
+  Dam_Slope_deg Float @default(0.0)
+  Lake_Temp_C Float @default(0.0)
+  Elevation_m Float @default(0.0)
   observationDate  DateTime @default(now())
 
   // AI result
@@ -79,10 +79,17 @@ model lakereport {
   assessedAt       DateTime  @default(now())
 
   // Verification
-  verificationStatus VerificationStatus @default(VERIFIED)
+  verificationStatus VerificationStatus @default(PENDING)
   verifiedById     Int?
   verifiedBy       official? @relation("VerifiedReports", fields: [verifiedById], references: [id])
   verifiedAt       DateTime?
+
+  // Decline
+  
+  declineById     Int?
+  declineBy       official? @relation("DeclineReports", fields: [declineById], references: [id])
+  declinedAt       DateTime?
+
 
   createdAt        DateTime @default(now())
 }
@@ -90,6 +97,7 @@ enum RiskLevel {
   LOW
   MEDIUM
   HIGH
+  IMMEDIATE
 }
 enum VerificationStatus {
   PENDING

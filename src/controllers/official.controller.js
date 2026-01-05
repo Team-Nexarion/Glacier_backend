@@ -113,7 +113,7 @@ async function officialSignIn(req, res, next) {
     res.cookie("authToken", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -178,9 +178,225 @@ async function updatePasswordOfficial(req, res, next) {
     next(error);
   }
 }
+async function uploadData(req, res, next) {
+  try {
+    const {
+      lakeName,
+      latitude,
+      longitude,
+      region,
+      Lake_Area_km2,
+      Dam_Slope_deg,
+      Lake_Temp_C,
+      Elevation_m
+    } = req.body;
+
+    if (!lakeName || !latitude || !longitude || !region) {
+      throw new ApiError(400, "Missing required lake details");
+    }
+
+    const officialId = req.user.id;
+
+    const record = await lakeRepo.create({
+      lakeName,
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+      region,
+      Lake_Area_km2: Number(Lake_Area_km2),
+      Dam_Slope_deg: Number(Dam_Slope_deg),
+      Lake_Temp_C: Number(Lake_Temp_C),
+      Elevation_m: Number(Elevation_m),
+      uploadedById: officialId,
+      verificationStatus: "PENDING"
+    });
+
+    res.status(201).json(
+      new ApiSuccess({
+        message: "Data uploaded successfully",
+        data: record
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+async function verifyData(req, res, next) {
+  try {
+    const reportId = Number(req.params.reportId);
+    const officialId = req.user.id;
+
+    if (!reportId) {
+      throw new ApiError(400, "Invalid report ID");
+    }
+
+    // 1. Fetch report
+    const report = await lakeRepo.findUnique({
+      id: reportId
+    });
+
+    if (!report) {
+      throw new ApiError(404, "Lake report not found");
+    }
+
+    // 2. State validation (IMPORTANT)
+    if (report.verificationStatus === "VERIFIED") {
+      throw new ApiError(400, "Report is already verified");
+    }
+
+    if (report.verificationStatus === "REJECTED") {
+      throw new ApiError(400, "Rejected report cannot be verified");
+    }
+
+    // 3. Update verification fields
+    const updatedReport = await lakeRepo.update(
+      { id: reportId },
+      {
+        verificationStatus: "VERIFIED",
+        verifiedById: officialId,
+        verifiedAt: new Date(),
+        declinedAt: null,
+        declineById: null
+      }
+    );
+
+    res.status(200).json(
+      new ApiSuccess({
+        message: "Data assessment verified successfully",
+        data: updatedReport
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getPendingHighRiskReports(req, res, next) {
+  try {
+    const reports = await lakeRepo.findMany({
+      where: {
+        verificationStatus: "PENDING",
+        riskLevel: {
+          not: "LOW"
+        }
+      },
+      include: {
+        uploadedBy: {
+          select: {
+            id: true,
+            name: true,
+            department: true
+          }
+        }
+      },
+      orderBy: [
+        { riskLevel: "desc" },   // HIGH / IMMEDIATE first
+        { assessedAt: "desc" }   // most recent AI first
+      ]
+    });
+
+    res.status(200).json(
+      new ApiSuccess({
+        message: "Pending non-low risk lake reports fetched successfully",
+        data: reports
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+async function rejectData(req, res, next) {
+  try {
+    const reportId = Number(req.params.reportId);
+    const officialId = req.user.id;
+
+    if (!reportId) {
+      throw new ApiError(400, "Invalid report ID");
+    }
+
+    // 1. Fetch report
+    const report = await lakeRepo.findUnique({
+      id: reportId
+    });
+
+    if (!report) {
+      throw new ApiError(404, "Lake report not found");
+    }
+
+    // 2. State validation
+    if (report.verificationStatus === "VERIFIED") {
+      throw new ApiError(400, "Verified report cannot be rejected");
+    }
+
+    if (report.verificationStatus === "REJECTED") {
+      throw new ApiError(400, "Report is already rejected");
+    }
+
+    // 3. Update rejection fields
+    const updatedReport = await lakeRepo.update(
+      { id: reportId },
+      {
+        verificationStatus: "REJECTED",
+        declineById: officialId,
+        declinedAt: new Date(),
+        verifiedById: null,
+        verifiedAt: null
+      }
+    );
+
+    res.status(200).json(
+      new ApiSuccess({
+        message: "Data assessment rejected successfully",
+        data: updatedReport
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getOfficialProfile(req, res, next) {
+  try {
+    const officialId = req.user.id;
+
+    const official = await officialRepo.findUnique({ id: officialId });
+
+    if (!official) {
+      throw new ApiError(404, "Official not found");
+    }
+
+    // remove sensitive fields
+    delete official.password;
+
+    res.status(200).json(
+      new ApiSuccess({
+        message: "Official profile fetched successfully",
+        data: {
+          id: official.id,
+          name: official.name,
+          email: official.email,
+          photo: official.photo,
+          position: official.position,
+          department: official.department,
+          isVerified: official.isVerified,
+          createdAt: official.createdAt
+        }
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+
 module.exports = {
   registerOfficial,
   officialSignIn,
   officialSignOut,
-  updatePasswordOfficial
+  updatePasswordOfficial,
+  uploadData,
+  verifyData,
+  getPendingHighRiskReports,
+  rejectData,
+  getOfficialProfile
 };

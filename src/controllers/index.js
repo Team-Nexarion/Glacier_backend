@@ -4,12 +4,18 @@ const {registerAdmin,
     verifyOfficial,
     getOfficials,
     declineOfficial,
-    updatePassword}=require("./admin.controller");
+    updatePassword
+}=require("./admin.controller");
 const {
    registerOfficial,
     officialSignIn,
     officialSignOut,
-    updatePasswordOfficial
+    updatePasswordOfficial,
+    uploadData,
+    verifyData,
+    getPendingHighRiskReports,
+    rejectData,
+    getOfficialProfile
 }=require("./official.controller")
 module.exports={registerAdmin,
     adminSignIn,
@@ -21,5 +27,10 @@ module.exports={registerAdmin,
     registerOfficial,
     officialSignIn,
     officialSignOut,
-    updatePasswordOfficial
+    updatePasswordOfficial,
+    uploadData,
+    verifyData,
+    getPendingHighRiskReports,
+    rejectData,
+    getOfficialProfile
 };

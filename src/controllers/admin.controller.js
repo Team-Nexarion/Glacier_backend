@@ -176,7 +176,9 @@ async function verifyOfficial(req, res, next) {
 async function getOfficials(req,res,next){
   try{
     const officials = await officialRepo.findMany({
-      isVerified:false
+      where: {
+        isVerified: false
+      }
     });
 
     res.status(200).json(
