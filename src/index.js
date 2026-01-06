@@ -11,20 +11,22 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-// ✅ Parse multiple frontend URLs
+// ✅ PARSE MULTIPLE FRONTEND URLS (THIS IS THE KEY)
 const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(",").map(o => o.trim())
-  : [];
+  .split(",")
+  .map(url => url.trim());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ Proper CORS
+// ✅ MULTI-ORIGIN CORS (WORKS)
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // Postman / server-to-server
+    // Allow Postman / server-to-server
+    if (!origin) return callback(null, true);
 
+    // Allow multiple frontends + local dev
     if (
       allowedOrigins.includes(origin) ||
       origin.startsWith("http://localhost:") ||
@@ -35,17 +37,15 @@ app.use(cors({
 
     return callback(new Error(`CORS blocked: ${origin}`));
   },
+  credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
-
-// ✅ Handle preflight explicitly (important)
-app.options("*", cors());
 
 app.use("/", router);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log("Allowed origins:", allowedOrigins);
+  console.log(`Server running on port ${PORT}`);
 });
