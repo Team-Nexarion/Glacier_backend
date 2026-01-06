@@ -11,13 +11,19 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+// ✅ Parse multiple frontend URLs
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map(o => o.trim())
+  : [];
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// ✅ Proper CORS
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // Postman, server-to-server
+    if (!origin) return callback(null, true); // Postman / server-to-server
 
     if (
       allowedOrigins.includes(origin) ||
@@ -34,7 +40,8 @@ app.use(cors({
   credentials: true
 }));
 
-
+// ✅ Handle preflight explicitly (important)
+app.options("*", cors());
 
 app.use("/", router);
 app.use(errorHandler);
