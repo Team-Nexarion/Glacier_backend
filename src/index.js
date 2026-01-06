@@ -17,15 +17,17 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // Postman, server-to-server
 
-    const allowed =
-      origin === process.env.FRONTEND_URL ||
+    if (
+      allowedOrigins.includes(origin) ||
       origin.startsWith("http://localhost:") ||
-      origin.startsWith("http://127.0.0.1:");
+      origin.startsWith("http://127.0.0.1:")
+    ) {
+      return callback(null, true);
+    }
 
-    if (allowed) callback(null, true);
-    else callback(new Error("CORS blocked"));
+    return callback(new Error(`CORS blocked: ${origin}`));
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
