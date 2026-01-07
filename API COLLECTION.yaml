@@ -1,0 +1,619 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Glacier project
+meta:
+  id: wrk_2b7e680c0645463fbe33ea4b9cbf7441
+  created: 1766208815934
+  modified: 1766208815934
+  description: ""
+collection:
+  - name: admin
+    meta:
+      id: fld_f47d1a8870bf4591bda22d23fc57ba20
+      created: 1767219793088
+      modified: 1767219795769
+      sortKey: -1767219793088
+      description: ""
+    children:
+      - url: https://glacier-backend-4r0g.onrender.com/admin/register
+        name: Register Admin
+        meta:
+          id: req_4783646863b848a99b11fd2ce7592162
+          created: 1767219797034
+          modified: 1767382401451
+          isPrivate: false
+          description: ""
+          sortKey: -1767219797034
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: name
+              value: Subhajit
+              description: ""
+              disabled: false
+            - name: email
+              value: roysubhajit2005@gmail.com
+              description: ""
+              disabled: false
+            - name: photo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: D:\new download\passport\Pi7_Passport_Photo (7).jpeg
+              type: file
+            - name: position
+              value: Department of Glacier
+              description: ""
+              disabled: false
+            - name: department
+              value: Government of Asia
+              description: ""
+              disabled: false
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/admin/signin
+        name: Login Admin
+        meta:
+          id: req_7399c1f93aba42b1b3cf9e1fe4bcc352
+          created: 1767254628953
+          modified: 1767623042529
+          isPrivate: false
+          description: ""
+          sortKey: -1767254628953
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"roysubhajit2003@gmail.com",
+            	"password":"Sukalpo05"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://glacier-backend-4r0g.onrender.com/admin/updatepassword
+        name: Update Password Admin
+        meta:
+          id: req_612b66af10d04a68a08491becfd3ed76
+          created: 1767255956310
+          modified: 1767382590576
+          isPrivate: false
+          description: ""
+          sortKey: -1767255956310
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"current_password":"TGN1kdJXBONppRKySZX",
+            	"new_password":"Subha2003"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/admin/officials
+        name: Get Pending Requests
+        meta:
+          id: req_ff378b7295a24894972976ca4ad71995
+          created: 1767256840313
+          modified: 1767623052836
+          isPrivate: false
+          description: ""
+          sortKey: -1767256840313
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://glacier-backend-4r0g.onrender.com/admin/signout
+        name: Logout Admin
+        meta:
+          id: req_97eb9c85aed34e9fa8d392b827b35410
+          created: 1767256956433
+          modified: 1767382864838
+          isPrivate: false
+          description: ""
+          sortKey: -1767256956433
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/admin/officials/verify/6
+        name: Verify Official
+        meta:
+          id: req_094b94bee03f49b6bb9a49f28c114752
+          created: 1767257030185
+          modified: 1767623068690
+          isPrivate: false
+          description: ""
+          sortKey: -1767257030185
+        method: POST
+        parameters:
+          - name: officialId
+            value: "1"
+            description: ""
+            disabled: false
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://glacier-backend-4r0g.onrender.com/admin/officials/decline/2
+        name: Decline Official
+        meta:
+          id: req_13d0e7074b74429faae88659a83f08b1
+          created: 1767282733369
+          modified: 1767383247965
+          isPrivate: false
+          description: ""
+          sortKey: -1767282733369
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: official
+    meta:
+      id: fld_fc76fda29b7842be8ac759f4d061ac79
+      created: 1767296662401
+      modified: 1767298360031
+      sortKey: -1767296662401
+      description: ""
+    children:
+      - url: http://localhost:3000/official/register
+        name: Register Official
+        meta:
+          id: req_6bc9229242024e33bc92f263521fd50b
+          created: 1767296666005
+          modified: 1767631502747
+          isPrivate: false
+          description: ""
+          sortKey: -1767296666005
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: email
+              value: roysubhajit2004@gmail.com
+              description: ""
+              disabled: false
+            - name: name
+              value: "Subhajit "
+              description: ""
+              disabled: false
+            - name: position
+              value: Head Officer
+              description: ""
+              disabled: false
+            - name: department
+              value: Department of CSE
+              description: ""
+              disabled: false
+            - name: photo
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\roysu\Downloads\drive-download-20251230T184222Z-3-001\WhatsApp
+                Image 2025-12-28 at 1.24.58 PM - Subhajit Roy.jpeg
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/official/signin
+        name: Login Official
+        meta:
+          id: req_e04b3a5d382f4d7d9a7ccf95e16154fb
+          created: 1767297384959
+          modified: 1767631754119
+          isPrivate: false
+          description: ""
+          sortKey: -1767297384959
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email":"roysubhajit2003@gmail.com",
+            	"password":"1UJNgdfGoix29DiJ8qZm"
+            }	
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/official/updatepassword
+        name: Update Password Official
+        meta:
+          id: req_e4ac88061da04eb5a53c355fcc34a484
+          created: 1767299008953
+          modified: 1767299597665
+          isPrivate: false
+          description: ""
+          sortKey: -1767299008953
+        method: PATCH
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"current_password":"edXi56GC8QCpNMu38Clu",
+            	"new_password":"Subhajit@2003"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/official/signout
+        name: Sign Out Official
+        meta:
+          id: req_a6b2e4af69cd42abb9c4b3173960f5af
+          created: 1767299623840
+          modified: 1767299768373
+          isPrivate: false
+          description: ""
+          sortKey: -1767299623840
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lakereport/uploaddata
+        name: Upload Data
+        meta:
+          id: req_3f082b46060b492a8b7defab5d832f81
+          created: 1767627133248
+          modified: 1767630161794
+          isPrivate: false
+          description: ""
+          sortKey: -1767627133248
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "lakeName": "South Lhonak Lake",
+              "latitude": 27.9023,
+              "longitude": 88.1346,
+              "region": "North Sikkim",
+              "Lake_Area_km2": 1.42,
+              "Dam_Slope_deg": 38.7,
+              "Lake_Temp_C": 6.8,
+              "Elevation_m": 5200
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/official/profile
+        name: User Profile
+        meta:
+          id: req_90f3581c49c14bf6bdaa02b31b617436
+          created: 1767630151676
+          modified: 1767631259414
+          isPrivate: false
+          description: ""
+          sortKey: -1767630151676
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Lake
+    meta:
+      id: fld_a81bd295690d4bdeb0b10ec32a3f4169
+      created: 1767628314716
+      modified: 1767628314716
+      sortKey: -1767628314716
+      description: ""
+    children:
+      - url: http://localhost:3000/lakereport/pending/high-risk
+        name: List of lakes
+        meta:
+          id: req_0f8ac1636c4d4727abcc400e3ceb287e
+          created: 1767628318477
+          modified: 1767628535371
+          isPrivate: false
+          description: ""
+          sortKey: -1767628318477
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lakereport/verify/2
+        name: Verify Report
+        meta:
+          id: req_52adf23b5c0e4203a7b4b390bb8e34b7
+          created: 1767628538609
+          modified: 1767634901210
+          isPrivate: false
+          description: ""
+          sortKey: -1767628538609
+        method: PATCH
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lakereport/reject/1
+        name: Decline Report
+        meta:
+          id: req_4c6f15219df749efb2557b752cd6d6c5
+          created: 1767628540455
+          modified: 1767634944128
+          isPrivate: false
+          description: ""
+          sortKey: -1767628540455
+        method: PATCH
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lakereport
+        name: All report
+        meta:
+          id: req_1c7bc3a2cc9b494d80697fff9eedf6c9
+          created: 1767641352215
+          modified: 1767641632960
+          isPrivate: false
+          description: ""
+          sortKey: -1767641352215
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/lakereport/details/2
+        name: particular report
+        meta:
+          id: req_4aedc4c930664d9c97ef5ab9e8cc05cb
+          created: 1767643624332
+          modified: 1767643653301
+          isPrivate: false
+          description: ""
+          sortKey: -1767643624332
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: AI
+    meta:
+      id: fld_cc2dfbf543fa48ffb8bbc232a9073e67
+      created: 1767691385347
+      modified: 1767691385347
+      sortKey: -1767691385347
+      description: ""
+    children:
+      - url: http://localhost:3000/lakereport/model
+        name: Model Connection
+        meta:
+          id: req_84ade4a7b4b241ecbaacaf31cbf00e6b
+          created: 1767692758079
+          modified: 1767800390396
+          isPrivate: false
+          description: ""
+          sortKey: -1767692758079
+        method: POST
+        headers:
+          - name: User-Agent
+            value: insomnia/12.2.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_541c40ddcc7bdf1852efd4d85ef8d820fc11feca
+    created: 1766208815941
+    modified: 1767632249164
+  cookies:
+    - id: 7ffdbc90-48a3-4c17-8025-26f912b4553f
+      key: authToken
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJyb3lzdWJoYWppdDIwMDNAZ21haWwuY29tIiwicm9sZSI6Im9mZmljaWFsIiwiaWF0IjoxNzY3NjMyMjQ5LCJleHAiOjE3NjgyMzcwNDl9.wPrN-XlGsqBCvEn-_oD0R2j89LMlhyiSRlESeBrs4M8
+      domain: localhost
+      path: /
+      secure: false
+      httpOnly: true
+      hostOnly: true
+    - id: 2098953d-6260-4079-94dc-d70accbae70d
+      key: authToken
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJyb3lzdWJoYWppdDIwMDNAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzY3NjIyOTM5LCJleHAiOjE3NjgyMjc3Mzl9.9udoVd4GpxyCFUy9fqXXl8DQQopQldpokwuwva8C5LM
+      domain: glacier-backend-4r0g.onrender.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+environments:
+  name: Base Environment
+  meta:
+    id: env_541c40ddcc7bdf1852efd4d85ef8d820fc11feca
+    created: 1766208815937
+    modified: 1767256293779
+    isPrivate: false
