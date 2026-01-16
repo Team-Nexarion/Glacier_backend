@@ -221,13 +221,13 @@ async function uploadData(req, res, next) {
       { timeout: 50000 }
     );
     
-    console.log("ML API time:", Date.now() - start, "ms");
+
     if (mlResponse.data.status !== "success") {
       throw new ApiError(502, "Error in ML prediction service");
     }
 
     const { risk_level, risk_index } = mlResponse.data;
-
+    
    
     const record = await lakeRepo.create({
       lakeName,
@@ -241,7 +241,7 @@ async function uploadData(req, res, next) {
 
       //  ML fields
       riskLevel: risk_level,       
-
+      confidence: risk_index*100,
       uploadedById: officialId,
       verificationStatus: "PENDING"
     });
