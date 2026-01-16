@@ -261,9 +261,6 @@ async function getPendingHighRiskReports(req, res, next) {
     const reports = await lakeRepo.findMany({
       where: {
         verificationStatus: "PENDING",
-        riskLevel: {
-          not: "LOW"
-        }
       },
       include: {
         uploadedBy: {
@@ -282,7 +279,7 @@ async function getPendingHighRiskReports(req, res, next) {
 
     res.status(200).json(
       new ApiSuccess({
-        message: "Pending non-low risk lake reports fetched successfully",
+        message: "Pending risk lake reports fetched successfully",
         data: reports
       })
     );
