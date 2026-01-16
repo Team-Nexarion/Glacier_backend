@@ -4,7 +4,7 @@ const axios = require("axios");
 const path = require("path");
 const prisma = require("../../prisma/client");
 const { ApiError, ApiSuccess } = require("../utils");
-const ML_API_URL = "http://127.0.0.1:5000/predict";
+
 
 const lakeRepo = new LakeReportRepository(prisma);
 
@@ -82,6 +82,7 @@ async function getLakeDetails(req, res, next) {
             email: true,
             position: true,
             department: true,
+            photo: true,
           },
         },
       },
