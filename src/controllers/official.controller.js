@@ -211,7 +211,7 @@ async function uploadData(req, res, next) {
 
     // 2️⃣ Call ML backend
     const mlResponse = await axios.post(
-      "https://ml-backend-1-suy7.onrender.com/predict",
+      process.env.ML_API_URL,
       {
         Lake_Area_km2: Number(Lake_Area_km2),
         Dam_Slope_deg: Number(Dam_Slope_deg),
@@ -256,7 +256,7 @@ async function uploadData(req, res, next) {
   }
 }
 
-async function getPendingHighRiskReports(req, res, next) {
+async function getPendingRiskReports(req, res, next) {
   try {
     const reports = await lakeRepo.findMany({
       where: {
@@ -428,7 +428,7 @@ module.exports = {
   updatePasswordOfficial,
   uploadData,
   verifyData,
-  getPendingHighRiskReports,
+  getPendingRiskReports,
   rejectData,
   getOfficialProfile
 };

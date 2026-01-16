@@ -2,7 +2,7 @@ const lakeRouter = require("express").Router();
 
 const {
     uploadData,
-    getPendingHighRiskReports,
+    getPendingRiskReports,
     verifyData,
     rejectData,
     getAllLakeData,
@@ -22,7 +22,7 @@ lakeRouter.get(
   "/pending/high-risk",
   authenticate,
   isOfficial,
-  getPendingHighRiskReports,
+  getPendingRiskReports,
 );
 
 lakeRouter.patch(
