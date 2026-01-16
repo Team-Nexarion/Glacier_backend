@@ -7,7 +7,7 @@ const {
     rejectData,
     getAllLakeData,
     getLakeDetails,
-    assessPendingLakes
+
 } = require("../controllers");
 
 const middlewares = require("../middlewares");
@@ -15,7 +15,7 @@ const authenticate = middlewares.authenticate;
 const isOfficial = middlewares.isOfficial;
 
 lakeRouter.get("/",getAllLakeData);
-lakeRouter.post("/model",assessPendingLakes);
+
 lakeRouter.get("/details/:lakeId", getLakeDetails);
 lakeRouter.post("/uploaddata",authenticate,isOfficial,uploadData);
 lakeRouter.get(

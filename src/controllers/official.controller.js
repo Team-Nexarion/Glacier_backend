@@ -1,6 +1,8 @@
 const { LakeReportRepository, OfficialRepository } = require("../repository");
 const prisma = require("../../prisma/client");
 
+const axios = require("axios");
+
 const {ApiError,ApiSuccess}= require('../utils');
 
 const bcrypt = require('bcrypt');
@@ -191,12 +193,41 @@ async function uploadData(req, res, next) {
       Elevation_m
     } = req.body;
 
-    if (!lakeName || !latitude || !longitude || !region) {
+    // 1️⃣ Validate required fields (stop trusting users)
+    if (
+      !lakeName ||
+      latitude === undefined ||
+      longitude === undefined ||
+      !region ||
+      Lake_Area_km2 === undefined ||
+      Dam_Slope_deg === undefined ||
+      Lake_Temp_C === undefined ||
+      Elevation_m === undefined
+    ) {
       throw new ApiError(400, "Missing required lake details");
     }
 
     const officialId = req.user.id;
 
+    // 2️⃣ Call ML backend
+    const mlResponse = await axios.post(
+      "https://ml-backend-1-suy7.onrender.com/predict",
+      {
+        Lake_Area_km2: Number(Lake_Area_km2),
+        Dam_Slope_deg: Number(Dam_Slope_deg),
+        Lake_Temp_C: Number(Lake_Temp_C),
+        Elevation_m: Number(Elevation_m)
+      },
+      { timeout: 50000 }
+    );
+
+    if (mlResponse.data.status !== "success") {
+      throw new ApiError(502, "Error in ML prediction service");
+    }
+
+    const { risk_level, risk_index } = mlResponse.data;
+
+   
     const record = await lakeRepo.create({
       lakeName,
       latitude: Number(latitude),
@@ -206,14 +237,53 @@ async function uploadData(req, res, next) {
       Dam_Slope_deg: Number(Dam_Slope_deg),
       Lake_Temp_C: Number(Lake_Temp_C),
       Elevation_m: Number(Elevation_m),
+
+      //  ML fields
+      riskLevel: risk_level,       
+
       uploadedById: officialId,
       verificationStatus: "PENDING"
     });
 
     res.status(201).json(
       new ApiSuccess({
-        message: "Data uploaded successfully",
+        message: "Data uploaded and risk evaluated successfully",
         data: record
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getPendingHighRiskReports(req, res, next) {
+  try {
+    const reports = await lakeRepo.findMany({
+      where: {
+        verificationStatus: "PENDING",
+        riskLevel: {
+          not: "LOW"
+        }
+      },
+      include: {
+        uploadedBy: {
+          select: {
+            id: true,
+            name: true,
+            department: true
+          }
+        }
+      },
+      orderBy: [
+        { riskLevel: "desc" },   // HIGH / IMMEDIATE first
+        { assessedAt: "desc" }   // most recent AI first
+      ]
+    });
+
+    res.status(200).json(
+      new ApiSuccess({
+        message: "Pending non-low risk lake reports fetched successfully",
+        data: reports
       })
     );
   } catch (error) {
@@ -263,41 +333,6 @@ async function verifyData(req, res, next) {
       new ApiSuccess({
         message: "Data assessment verified successfully",
         data: updatedReport
-      })
-    );
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function getPendingHighRiskReports(req, res, next) {
-  try {
-    const reports = await lakeRepo.findMany({
-      where: {
-        verificationStatus: "PENDING",
-        riskLevel: {
-          not: "LOW"
-        }
-      },
-      include: {
-        uploadedBy: {
-          select: {
-            id: true,
-            name: true,
-            department: true
-          }
-        }
-      },
-      orderBy: [
-        { riskLevel: "desc" },   // HIGH / IMMEDIATE first
-        { assessedAt: "desc" }   // most recent AI first
-      ]
-    });
-
-    res.status(200).json(
-      new ApiSuccess({
-        message: "Pending non-low risk lake reports fetched successfully",
-        data: reports
       })
     );
   } catch (error) {
