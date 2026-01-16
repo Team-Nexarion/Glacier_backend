@@ -208,7 +208,7 @@ async function uploadData(req, res, next) {
     }
 
     const officialId = req.user.id;
-
+    const start = Date.now();
     // 2️⃣ Call ML backend
     const mlResponse = await axios.post(
       process.env.ML_API_URL,
@@ -220,7 +220,8 @@ async function uploadData(req, res, next) {
       },
       { timeout: 50000 }
     );
-
+    
+    console.log("ML API time:", Date.now() - start, "ms");
     if (mlResponse.data.status !== "success") {
       throw new ApiError(502, "Error in ML prediction service");
     }
