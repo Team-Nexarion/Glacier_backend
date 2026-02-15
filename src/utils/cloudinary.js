@@ -1,4 +1,4 @@
-const { ApiError } = require('./ApiError');
+const ApiError = require('./ApiError');
 const fs = require("fs");
 const cloudinary = require('cloudinary').v2;
 if (
